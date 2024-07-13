@@ -23,7 +23,7 @@ ll rnd(ll l,ll r){ return l+rng()%(r-l+1);}
 const ll oo = 1e18+7;
 const int INF = 1e9+7;
 const ll MOD = 1e9 + 7;
-const int NMAX = 1e3 + 10;
+const int NMAX = 3e3 + 10;
 /*
     ,_
     (OvO)
@@ -33,13 +33,6 @@ const int NMAX = 1e3 + 10;
 int n,m;
 string a,b;
 int dp[NMAX][NMAX];
-void qhd(){
-    FOR(i,1,n)  FOR(j,1,m){
-        dp[i][j] = max(dp[i - 1][j],dp[i][j - 1]);
-        if(a[i] == b[j])    dp[i][j] = max(dp[i][j],dp[i - 1][j - 1] + 1);
-    }
-
-}
 signed main()
 {
  	ios_base::sync_with_stdio(0);
@@ -53,9 +46,20 @@ signed main()
     cin>>a>>b;
     n = a.size();
     m = b.size();
-    a = ' ' + a;
-    b = ' ' + b;
-    qhd();
+    FOR(i,1,n)  FOR(j,1,m){
+        dp[i][j] = max(dp[i - 1][j],dp[i][j - 1]);
+        if(a[i - 1] == b[j - 1])    dp[i][j] = max(dp[i][j],dp[i - 1][j - 1] + 1);
+    }
+    string ans;
+    int i = n,j = m;
+    while(i != 0 && j != 0){
+        if(a[i - 1] == b[j - 1])    ans += a[i - 1],--i,--j;
+        else{
+            if(dp[i][j - 1] < dp[i - 1][j])    --i;
+            else    --j;
+        }
+    }
+    FORD(i,ans.size() - 1,0)    cout<<ans[i];
     cerr <<endl<< "Time elapsed: " << (1.0 * clock() / CLOCKS_PER_SEC) << endl;
     return 0;
 }
